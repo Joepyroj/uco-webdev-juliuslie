@@ -19,7 +19,7 @@ class ArticleController extends Controller
                 'content'=> $request->content,
                 'date' => date('Y-m-d H:i:s')
             ]);
-        return redirect()->route('article.list');
+            return redirect()->route('article.list');
         }
         return view('article.form');
     }
