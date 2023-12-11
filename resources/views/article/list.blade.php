@@ -14,8 +14,8 @@
     <div class="container">
         @if (count($articles) < 10)
             <a class="btn btn-success" href="{{ route('article.create') }}">Tambah Artikel</a>
-         @endif
-         @foreach($articles as $article)
+        @endif
+        @foreach($articles as $article)
         <div class="card mt-3">
             <div class="card-body">
                 <h5 class="card-title">{{ $article['title'] }}</h5>
