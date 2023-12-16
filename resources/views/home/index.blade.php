@@ -1,4 +1,4 @@
-<x-template title="Home">
+<x-template>
     <div class="container">
         <h1>Halo, {{ $nama }}</h1>
         {!! $tanggal !!}
