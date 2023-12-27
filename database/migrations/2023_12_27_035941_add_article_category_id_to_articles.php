@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('article_categories', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('articles', function (Blueprint $table) {
+            $table->unsignedBigInteger('article_category_id')
+                ->references('id')->on('article_categories')
+                ->onDelete('cascade');
         });
     }
 
@@ -22,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('article_categories');
+        Schema::table('articles', function (Blueprint $table) {
+            $table->dropColumn('article_category_id');
+        });
     }
 };
