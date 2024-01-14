@@ -24,7 +24,7 @@ class ArticleCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:article_categories|max:255',
+            'name' => 'required|unique:article_categories|max:100',
         ]);
 
         ArticleCategory::create([
