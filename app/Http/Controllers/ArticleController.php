@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\ArticleComment;
 use App\Models\ArticleCategory;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
@@ -21,6 +22,7 @@ class ArticleController extends Controller
     }
     function create(Request $request)
     {
+        $article_categories = $request->articleCategories;
         $article_categories = ArticleCategory::orderBy('name')->get();
 
         if ($request->isMethod('post')) {
@@ -71,7 +73,7 @@ class ArticleController extends Controller
         if (!$article) {
             return abort(404);
         }
-
+        $articleCategories = $request->articleCategories;
         $articleCategories = ArticleCategory::orderBy('name')->get();
         if ($request->isMethod('post')) {
             $request->validate([
@@ -100,6 +102,7 @@ class ArticleController extends Controller
         return view('article.form', [
             'article' => $article,
             'article_categories' => $articleCategories,
+            'allow_edit_slug' => Gate::allow('isAdmin'),
         ]);
     }
     function delete(string $id, Request $request)

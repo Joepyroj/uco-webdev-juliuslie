@@ -14,12 +14,13 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 @if (count($articles) < 10)
-                    <a class="btn btn-success" href="{{ route('article.create') }}">Tambah Artikel</a>
+                    @canany(['isAdmin', 'isAuthor'])
+                        <a class="btn btn-success" href="{{ route('article.create') }}">Tambah Artikel</a>
+                    @endcanany
                 @endif
 
                 <a href="{{ route('article_category.list') }}" class="btn btn-primary">Kategori artikel</a>
             </div>
-
             @foreach ($articles as $article)
                 <div class="card mt-3">
                     <div class="card-body">
@@ -30,9 +31,9 @@
                         <p class="card-text">
                             {{ $article->content }}
                         </p>
-                        <div class="badge text-bg-light">
+                        {{-- <div class="badge text-bg-light">
                             {{ $article->category->name }}
-                        </div>
+                        </div> --}}
                         <div class="mt-3">
                             @if ($article->comments_count > 0)
                                 <div class="mb-2 text-muted">Komentar terakhir</div>
@@ -40,9 +41,9 @@
                             @endif
                             <a href="{{ route('article.single', ['slug' => $article->slug]) }}#comment">Lihat
                                 {{ $article->comments_count }} komentar</a>
-
                         </div>
                     </div>
+                </div>
             @endforeach
         </div>
     </x-template>
