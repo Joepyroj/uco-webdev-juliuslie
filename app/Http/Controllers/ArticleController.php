@@ -8,12 +8,19 @@ use App\Models\ArticleComment;
 use App\Models\ArticleCategory;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\File;
 
 class ArticleController extends Controller
 {
     function list(Request $request)
     {
-        $articles = Article::paginate(10);
+        $articles = Article::where(function ($query) use ($request) {
+            $query->where('title', 'like', '%' . $request->search . '%')->orWhere('content', 'like', '%' . $request->search . '%');
+        })
+            ->paginate(5)
+            ->withQueryString();
+
         return view('article.list', [
             'articles' => $articles,
         ]);
@@ -28,6 +35,7 @@ class ArticleController extends Controller
                 'title' => ['required', 'string', 'max:255', Rule::unique('articles')],
                 'content' => ['required', 'string', 'max:2000'],
                 'article_category_id' => ['required', 'integer', Rule::in($article_categories->pluck('id'))],
+                'image' => [File::image()->max('10mb')]
             ]);
             $slug = Str::slug($request->title);
             if (Article::where('slug', $slug)->exists()) {
@@ -42,6 +50,12 @@ class ArticleController extends Controller
             ]);
 
             if ($article) {
+                if ($request->file('image')) {
+                $path = $request->file('image')->storeAs('articles', $article->id.'.png');
+                $article->image = $path;
+                $article->save();
+                }
+
                 return redirect()
                     ->route('article.list')
                     ->withSuccess('Artikel berhasil dibuat');
@@ -109,7 +123,12 @@ class ArticleController extends Controller
         if (!$article) {
             return abort(404);
         }
+        $image = $article->image;
+
         if ($article->delete()) {
+            if ($image) {
+                Storage::delete($image);
+            }
             return redirect()
                 ->route('article.list')
                 ->withSuccess('Artikel telah dihapus');

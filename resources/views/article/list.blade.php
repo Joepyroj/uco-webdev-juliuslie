@@ -12,8 +12,15 @@
 
 <body><x-template>
         <div class="container">
+            <form class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="search" id="search" class="form-control"
+                        value="{{ request()->query('search') }}" placeholder="Cari artikel">
+                    <button type="submit" class="btn btn-primary">Terapkan</button>
+                </div>
+            </form>
             <div class="d-flex justify-content-between align-items-center mb-3">
-                @if (count($articles) < 10)
+                @if (count($articles) < 30)
                     @canany(['isAdmin', 'isAuthor'])
                         <a class="btn btn-success" href="{{ route('article.create') }}">Tambah Artikel</a>
                     @endcanany

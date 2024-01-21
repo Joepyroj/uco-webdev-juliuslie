@@ -12,15 +12,15 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider">
-                @foreach($users as $user)
-                <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->role->name }}</td>
-                    <td>
-                        <a href="{{ route('user.edit', ['id' => $user->id]) }}" class="btn btn-info">Ubah</a>
-                    </td>
-                </tr>
+                @foreach ($users as $user)
+                    <tr>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ $user->role?->name }}</td>
+                        <td>
+                            <a href="{{ route('user.edit', ['id' => $user->id]) }}" class="btn btn-info">Ubah</a>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>

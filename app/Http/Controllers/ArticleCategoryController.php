@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ArticleCategoryController extends Controller
 {
     // Method to list article categories
-    public function index()
+    public function list()
     {
         $categories = ArticleCategory::all();
         return view('article_category.list', compact('categories'));
