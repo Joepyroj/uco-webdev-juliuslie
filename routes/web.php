@@ -35,12 +35,12 @@ Route::controller(ArticleCategoryController::class)->middleware('auth')->group(f
         Route::post('/article_categories/{id}/delete', 'delete')->name('article_category.delete');
     });
 
-Route::controller(\App\Http\Controllers\UserController::class)->middleware('auth')->group(function () {
-        Route::get('/users', 'list')->name('user.list');
-        Route::match(['get', 'post'], '/users/create', 'create')->name('user.create');
-        Route::match(['get', 'post'], '/users/{id}/edit', 'edit')->name('user.edit');
-        Route::post('/users/{id}/delete', 'delete')->name('user.delete');
-    });
+// Route::controller(\App\Http\Controllers\UserController::class)->middleware('auth')->group(function () {
+//         Route::get('/users', 'list')->name('user.list');
+//         Route::match(['get', 'post'], '/users/create', 'create')->name('user.create');
+//         Route::match(['get', 'post'], '/users/{id}/edit', 'edit')->name('user.edit');
+//         Route::post('/users/{id}/delete', 'delete')->name('user.delete');
+//     });
 
 Route::match(['get', 'post'], '/login', [\App\Http\Controllers\LoginController::class, 'form'])->name('login')->middleware('guest');
 

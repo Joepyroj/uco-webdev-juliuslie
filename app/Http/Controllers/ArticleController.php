@@ -13,9 +13,7 @@ class ArticleController extends Controller
 {
     function list(Request $request)
     {
-        $articles = Article::get();
-
-        // $articles = $request->session()->get('articles') ?? [];
+        $articles = Article::paginate(10);
         return view('article.list', [
             'articles' => $articles,
         ]);
