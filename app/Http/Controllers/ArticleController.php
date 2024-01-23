@@ -10,6 +10,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class ArticleController extends Controller
 {
@@ -35,7 +37,7 @@ class ArticleController extends Controller
                 'title' => ['required', 'string', 'max:255', Rule::unique('articles')],
                 'content' => ['required', 'string', 'max:2000'],
                 'article_category_id' => ['required', 'integer', Rule::in($article_categories->pluck('id'))],
-                'image' => [File::image()->max('10mb')]
+                'image' => [File::image()->max('10mb')],
             ]);
             $slug = Str::slug($request->title);
             if (Article::where('slug', $slug)->exists()) {
@@ -51,10 +53,15 @@ class ArticleController extends Controller
 
             if ($article) {
                 if ($request->file('image')) {
-                $path = $request->file('image')->storeAs('articles', $article->id.'.png');
-                $article->image = $path;
-                $article->save();
+                    $path = $request->file('image')->storeAs('articles', $article->id . '.png');
+                    $article->image = $path;
+                    $article->save();
                 }
+
+                $users = User::inRandomOrder()
+                    ->limit(5)
+                    ->get();
+                Mail::to($users)->send(new \App\Mail\ArticlePosted($article));
 
                 return redirect()
                     ->route('article.list')
@@ -75,6 +82,11 @@ class ArticleController extends Controller
         if (!$article) {
             return abort(404);
         }
+
+        if ($request->has('mailable')) {
+            return new \App\Mail\ArticlePosted($article);
+        }
+
         return view('article.single', [
             'article' => $article,
         ]);
