@@ -26,6 +26,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?= route('article.list') ?>">Artikel</a>
                     </li>
+                    @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= route('notification.list') ?>">
+                                Notifikasi
+                                @if (auth()->user()->unreadNotifications->isNotEmpty())
+                                    <span
+                                        class="badge text-bg-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
+                                @endif
+                            </a>
+                        </li>
+                    @endauth
                 </ul>
                 @auth
                     <div class="dropdown">

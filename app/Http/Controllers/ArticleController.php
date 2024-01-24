@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Notification;
 
 class ArticleController extends Controller
 {
@@ -165,6 +167,9 @@ class ArticleController extends Controller
             'content' => $request->comment,
         ]);
         if ($comment) {
+            $authors = User::where('role', \App\Enums\UserRoleEnum::Author->value)->get();
+            Notification::send($authors, new \App\Notifications\ArticleCommented($comment));
+
             return redirect()
                 ->route('article.single', ['slug' => $article->slug])
                 ->withSuccess('Komentar berhasil ditambahkan');
